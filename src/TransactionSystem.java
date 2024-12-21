@@ -50,7 +50,7 @@ public class TransactionSystem{
         }
     }
 
-    // Reverse transaction to restore account balance in case of a error
+    // Reverse transaction to restore account balance in case of an error
     public void reverseTransaction(int fromAccountId, int toAccountId, BigDecimal amount){
         System.out.println("Reversing Transaction ....");
         BankAccount fromAccount = accounts.get(fromAccountId);
