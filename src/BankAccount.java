@@ -30,7 +30,12 @@ public class BankAccount {
         balance = balance.subtract(amount);
     }
 
-    public Lock getLock(){
-        return lock;
+    public void lock(){
+        lock.lock();
     }
+
+    public void unlock(){
+        lock.unlock();
+    }
+
 }
