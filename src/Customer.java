@@ -9,7 +9,7 @@ public class Customer implements Runnable{
     @Override
     public void run() {
         try {
-            coffeeShop.placeOrder("Coffee");
+            coffeeShop.placeOrder("Coffee " + Thread.currentThread().getName());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

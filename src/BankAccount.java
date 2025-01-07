@@ -28,7 +28,6 @@ public class BankAccount {
         }finally {
             readWriteLock.readLock().unlock();
         }
-
     }
 
     // Transaction safe deposit

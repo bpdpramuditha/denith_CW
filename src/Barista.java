@@ -7,10 +7,12 @@ public class Barista implements Runnable{
 
     @Override
     public void run() {
-        try {
-            coffeeShop.prepareOrder();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        while (true) {
+            try {
+                coffeeShop.prepareOrder();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }

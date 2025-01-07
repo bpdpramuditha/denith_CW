@@ -13,7 +13,11 @@ public class CoffeeShop {
     //places an order in the queue. If the queue is full, the method will wait until space becomes available.
     public synchronized void placeOrder(String order) throws InterruptedException {
         while (orderQueue.size() == capacity){
-            wait();//wait if the queue is full
+            try{
+                wait();//wait if the queue is full
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
         Thread.sleep(500);
         orderQueue.add(order); //Add orders to the queue, waiting if necessary for space
@@ -24,7 +28,11 @@ public class CoffeeShop {
     //Prepares an order from the queue. If the queue is empty, the method will wait until an order becomes available.
     public synchronized void prepareOrder() throws InterruptedException {
         while (orderQueue.isEmpty()){
-            wait();//wait if the queue is empty
+            try{
+                wait();//wait if the queue is empty
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
         Thread.sleep(1000);
         String order = orderQueue.poll(); //Retrieves and removes the order from the queue, waiting if necessary.

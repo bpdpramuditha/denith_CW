@@ -17,7 +17,7 @@ public class TransactionSystem{
         BankAccount fromAccount = accounts.get(fromAccountId);
         BankAccount toAccount = accounts.get(toAccountId);
 
-        // Deadlock prevention, always lock accounts in order of IDs
+        // Deadlock prevention, always lock accounts in order of IDs scenario where two threads performing transfers between the same accounts
         BankAccount firstLock = fromAccountId < toAccountId? fromAccount : toAccount;
         BankAccount secondLock = fromAccountId < toAccountId ? toAccount : fromAccount;
 
@@ -79,5 +79,9 @@ public class TransactionSystem{
         for (BankAccount account : accounts.values()) {
             System.out.println("Account " + account.getId() + " Balance: $" + account.getBalance());
         }
+    }
+
+    public BankAccount getAccount(int accountID) {
+        return accounts.get(accountID);
     }
 }
