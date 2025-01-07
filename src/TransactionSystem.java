@@ -18,12 +18,12 @@ public class TransactionSystem{
         BankAccount toAccount = accounts.get(toAccountId);
 
         // Deadlock prevention, always lock accounts in order of IDs scenario where two threads performing transfers between the same accounts
-        BankAccount firstLock = fromAccountId < toAccountId? fromAccount : toAccount;
-        BankAccount secondLock = fromAccountId < toAccountId ? toAccount : fromAccount;
+        BankAccount firstLockedAccount = fromAccountId < toAccountId? fromAccount : toAccount;
+        BankAccount secondLockAccount = fromAccountId < toAccountId ? toAccount : fromAccount;
 
-        firstLock.lock();
+        firstLockedAccount.lock();
         try {
-            secondLock.lock();
+            secondLockAccount.lock();
             try {
                 // Perform transaction if sufficient balance in the account
                 if (fromAccount.getBalance().compareTo(amount) >= 0) {
@@ -33,44 +33,34 @@ public class TransactionSystem{
                         System.out.println(Thread.currentThread().getName() + " transferred $" + amount +
                                 " from Account " + fromAccount.getId() +
                                 " to Account " + toAccount.getId());
-                    }catch (Exception e){
+                    }catch (InterruptedException e){
                         // Reverse the transaction if an error occurs
                         reverseTransaction(fromAccountId, toAccountId, amount);
-                        System.err.println("Transaction failed: " + e.getMessage());
+                        System.out.println("Transaction failed: " + e.getMessage());
                     }
                 }
                 else{
                     System.out.println(Thread.currentThread().getName() + ": Insufficient funds in Account " + fromAccount.getId());
                 }
             } finally {
-                secondLock.unlock();
+                secondLockAccount.unlock();
             }
         } finally {
-            firstLock.unlock();
+            firstLockedAccount.unlock();
         }
     }
 
     // Reverse transaction to restore account balance in case of an error
-    public void reverseTransaction(int fromAccountId, int toAccountId, BigDecimal amount){
+    public void reverseTransaction(int fromAccountId, int toAccountId, BigDecimal amount) {
         System.out.println("Reversing Transaction ....");
         BankAccount fromAccount = accounts.get(fromAccountId);
         BankAccount toAccount = accounts.get(toAccountId);
-
-        BankAccount firstLock = fromAccountId < toAccountId? fromAccount : toAccount;
-        BankAccount secondLock = fromAccountId < toAccountId ? toAccount : fromAccount;
-
-        firstLock.lock();
         try {
-            secondLock.lock();
-            try {
-                toAccount.withdraw(amount);
-                fromAccount.deposit(amount);
-                System.out.println("Reversed $" + amount + " from Account " + toAccountId + " to Account " + fromAccountId);
-            } finally {
-                secondLock.unlock();
-            }
-        } finally {
-            firstLock.unlock();
+            toAccount.withdraw(amount);
+            fromAccount.deposit(amount);
+            System.out.println("Reversed $" + amount + " from Account " + toAccountId + " to Account " + fromAccountId);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

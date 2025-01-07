@@ -9,7 +9,6 @@ public class BankAccount {
     private final int id;
     private BigDecimal balance;
     private final Lock lock = new ReentrantLock(true);// First come first fairness
-    private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(true); // fair lock for concurrent read/writes
 
     public BankAccount(int id, BigDecimal balance) {
         this.id = id;
@@ -22,32 +21,21 @@ public class BankAccount {
 
     // Concurrent reads are allowed
     public BigDecimal getBalance(){
-        readWriteLock.readLock().lock();
-        try {
-            return balance;
-        }finally {
-            readWriteLock.readLock().unlock();
-        }
+        return balance;
     }
 
     // Transaction safe deposit
-    public void deposit(BigDecimal amount){
-        readWriteLock.writeLock().lock();
-        try {
+    public void deposit(BigDecimal amount) throws InterruptedException {
+        if(amount.compareTo(BigDecimal.valueOf(2000)) > 0 && id == 2){ //test case scenario for transactional reversal
+           throw new InterruptedException("Transaction reversal if amount is more than 2000");
+        }else {
             balance = balance.add(amount);
-        }finally {
-            readWriteLock.writeLock().unlock();
         }
     }
 
     // Transaction fair withdraw
     public void withdraw(BigDecimal amount){
-        readWriteLock.writeLock().lock();
-        try {
-            balance = balance.subtract(amount);
-        }finally {
-            readWriteLock.writeLock().unlock();
-        }
+        balance = balance.subtract(amount);
     }
 
     // Transaction lock for first-come-first-served transaction safety
@@ -58,5 +46,4 @@ public class BankAccount {
     public void unlock(){
         lock.unlock();
     }
-
 }
