@@ -18,12 +18,12 @@ public class TransactionSystem{
         BankAccount toAccount = accounts.get(toAccountId);
 
         // Deadlock prevention, always lock accounts in order of IDs scenario where two threads performing transfers between the same accounts
-        BankAccount firstLockedAccount = fromAccountId < toAccountId? fromAccount : toAccount;
-        BankAccount secondLockAccount = fromAccountId < toAccountId ? toAccount : fromAccount;
+        BankAccount firstAccountLock = fromAccountId < toAccountId? fromAccount : toAccount;
+        BankAccount secondAccountLock = fromAccountId < toAccountId ? toAccount : fromAccount;
 
-        firstLockedAccount.lock();
+        firstAccountLock.lock();
         try {
-            secondLockAccount.lock();
+            secondAccountLock.lock();
             try {
                 // Perform transaction if sufficient balance in the account
                 if (fromAccount.getBalance().compareTo(amount) >= 0) {
@@ -43,10 +43,10 @@ public class TransactionSystem{
                     System.out.println(Thread.currentThread().getName() + ": Insufficient funds in Account " + fromAccount.getId());
                 }
             } finally {
-                secondLockAccount.unlock();
+                secondAccountLock.unlock();
             }
         } finally {
-            firstLockedAccount.unlock();
+            firstAccountLock.unlock();
         }
     }
 
