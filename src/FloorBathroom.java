@@ -2,7 +2,7 @@ import java.util.concurrent.Semaphore;
 
 public class FloorBathroom {
     private static final int BATHROOM_STALLS = 6;
-    private static final int NUM_EMPLOYEES = 10;
+    private static final int NUM_EMPLOYEES = 100;
 
     //Semaphore to control access to the stall
     private static final Semaphore stalls = new Semaphore(BATHROOM_STALLS, true);

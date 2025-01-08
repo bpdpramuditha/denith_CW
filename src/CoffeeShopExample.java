@@ -1,6 +1,6 @@
 public class CoffeeShopExample {
     public static void main(String[] args) {
-        CoffeeShop shop = new CoffeeShop(4);
+        CoffeeShop shop = new CoffeeShop(5);
 
         new Thread(new Barista(shop), "Barista " + 1).start();
         new Thread(new Barista(shop), "Barista " + 2).start();

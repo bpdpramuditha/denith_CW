@@ -16,8 +16,8 @@ public class Main {
         Thread transaction3 = new Thread(() -> transactionSystem.transfer(2, 3, new BigDecimal(300)),"Transaction3");
         Thread transaction4 = new Thread(() -> transactionSystem.transfer(3, 1, new BigDecimal(100)),"Transaction4");
         Thread transaction5 = new Thread(() -> {System.out.println("Balance of Account 1: " + transactionSystem.getAccount(1).getBalance());
-        System.out.println("Balance of Account 3: " + transactionSystem.getAccount(3).getBalance());
-    }, "BalanceReader");
+        System.out.println("Balance of Account 3: " + transactionSystem.getAccount(3).getBalance()
+        );}, "BalanceReader");
         Thread transaction6 = new Thread(() -> transactionSystem.transfer(2, 1, new BigDecimal(100)) ,"Transaction5");
         Thread transaction7 = new Thread(() -> transactionSystem.transfer(3, 2, new BigDecimal(50)) ,"Transaction6");
         Thread transaction8 = new Thread(() -> transactionSystem.transfer(1, 3, new BigDecimal(100)) ,"Transaction7");
